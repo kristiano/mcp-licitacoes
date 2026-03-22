@@ -55,6 +55,61 @@ class TestListarEleicoes:
         assert result[0].tipo == "Municipal"
 
 
+class TestListarEleicoesSupplementares:
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_returns_parsed(self) -> None:
+        respx.get(f"{ELEICAO_URL}/suplementares/2021/SP").mock(
+            return_value=httpx.Response(
+                200,
+                json=[
+                    {
+                        "id": 2040402021,
+                        "ano": 2021,
+                        "nomeEleicao": "Eleição Suplementar Mauá",
+                        "tipoEleicao": "Suplementar",
+                        "dataEleicao": "06/06/2021",
+                    }
+                ],
+            )
+        )
+        result = await client.listar_eleicoes_suplementares(2021, "SP")
+        assert len(result) == 1
+        assert result[0].ano == 2021
+
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_empty(self) -> None:
+        respx.get(f"{ELEICAO_URL}/suplementares/2021/SP").mock(
+            return_value=httpx.Response(200, json=[])
+        )
+        result = await client.listar_eleicoes_suplementares(2021, "SP")
+        assert result == []
+
+
+class TestListarEstadosSupplementares:
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_returns_states(self) -> None:
+        respx.get(f"{ELEICAO_URL}/estados/2021/ano").mock(
+            return_value=httpx.Response(
+                200,
+                json=[{"uf": "SP"}, {"uf": "RJ"}],
+            )
+        )
+        result = await client.listar_estados_suplementares(2021)
+        assert result == ["SP", "RJ"]
+
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_empty(self) -> None:
+        respx.get(f"{ELEICAO_URL}/estados/2021/ano").mock(
+            return_value=httpx.Response(200, json=[])
+        )
+        result = await client.listar_estados_suplementares(2021)
+        assert result == []
+
+
 class TestListarCargos:
     @pytest.mark.asyncio
     @respx.mock

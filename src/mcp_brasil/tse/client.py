@@ -184,6 +184,14 @@ async def listar_eleicoes_suplementares(ano: int, uf: str) -> list[Eleicao]:
     return [_parse_eleicao(e) for e in _safe_list(data, "eleicoes_suplementares")]
 
 
+async def listar_estados_suplementares(ano: int) -> list[str]:
+    """List states with supplementary elections in a given year."""
+    data = await _get(f"{ELEICAO_URL}/estados/{ano}/ano")
+    if isinstance(data, list):
+        return [str(e.get("uf", "")) for e in data if isinstance(e, dict) and e.get("uf")]
+    return []
+
+
 async def listar_cargos(eleicao_id: int, municipio: int) -> list[Cargo]:
     """List positions available in a municipality for an election."""
     url = f"{ELEICAO_URL}/listar/municipios/{eleicao_id}/{municipio}/cargos"

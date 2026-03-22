@@ -59,6 +59,63 @@ class TestListarEleicoes:
         assert "Nenhuma eleição" in result
 
 
+class TestListarEleicoesSupplementares:
+    @pytest.mark.asyncio
+    async def test_formats_table(self) -> None:
+        mock_data = [
+            Eleicao(
+                id=2040402021,
+                ano=2021,
+                nome="Eleição Suplementar Mauá",
+                tipo="Suplementar",
+                data_eleicao="06/06/2021",
+            )
+        ]
+        with patch(
+            f"{MODULE}.listar_eleicoes_suplementares",
+            new_callable=AsyncMock,
+            return_value=mock_data,
+        ):
+            result = await tools.listar_eleicoes_suplementares(2021, "SP")
+        assert "Suplementar" in result
+        assert "SP" in result
+        assert "2021" in result
+
+    @pytest.mark.asyncio
+    async def test_empty(self) -> None:
+        with patch(
+            f"{MODULE}.listar_eleicoes_suplementares",
+            new_callable=AsyncMock,
+            return_value=[],
+        ):
+            result = await tools.listar_eleicoes_suplementares(2021, "SP")
+        assert "Nenhuma eleição suplementar" in result
+
+
+class TestListarEstadosSupplementares:
+    @pytest.mark.asyncio
+    async def test_formats_states(self) -> None:
+        with patch(
+            f"{MODULE}.listar_estados_suplementares",
+            new_callable=AsyncMock,
+            return_value=["SP", "RJ", "MG"],
+        ):
+            result = await tools.listar_estados_suplementares(2021)
+        assert "SP" in result
+        assert "RJ" in result
+        assert "MG" in result
+
+    @pytest.mark.asyncio
+    async def test_empty(self) -> None:
+        with patch(
+            f"{MODULE}.listar_estados_suplementares",
+            new_callable=AsyncMock,
+            return_value=[],
+        ):
+            result = await tools.listar_estados_suplementares(2021)
+        assert "Nenhum estado" in result
+
+
 class TestListarCargos:
     @pytest.mark.asyncio
     async def test_formats_table(self) -> None:

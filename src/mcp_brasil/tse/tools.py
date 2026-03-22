@@ -54,6 +54,56 @@ async def listar_eleicoes() -> str:
     )
 
 
+async def listar_eleicoes_suplementares(ano: int, uf: str) -> str:
+    """Lista eleições suplementares de um estado em um ano específico.
+
+    Eleições suplementares ocorrem quando eleições regulares são anuladas
+    ou quando há vacância de cargo eletivo.
+
+    Args:
+        ano: Ano da eleição (ex: 2020, 2022).
+        uf: Sigla do estado (ex: SP, RJ, MG).
+
+    Returns:
+        Tabela com eleições suplementares encontradas.
+    """
+    eleicoes = await client.listar_eleicoes_suplementares(ano, uf)
+    if not eleicoes:
+        return f"Nenhuma eleição suplementar encontrada para {uf.upper()} em {ano}."
+
+    rows = [
+        (
+            str(e.id or "—"),
+            str(e.ano or "—"),
+            (e.nome or "—")[:40],
+            e.tipo or "—",
+            e.data_eleicao or "—",
+        )
+        for e in eleicoes
+    ]
+    return f"Eleições suplementares {uf.upper()} {ano} ({len(eleicoes)}):\n\n" + markdown_table(
+        ["ID", "Ano", "Nome", "Tipo", "Data"], rows
+    )
+
+
+async def listar_estados_suplementares(ano: int) -> str:
+    """Lista estados que tiveram eleições suplementares em um ano.
+
+    Útil para descobrir quais UFs tiveram eleições suplementares antes
+    de consultar os detalhes com listar_eleicoes_suplementares().
+
+    Args:
+        ano: Ano para consulta (ex: 2020, 2022).
+
+    Returns:
+        Lista de siglas de estados com eleições suplementares.
+    """
+    estados = await client.listar_estados_suplementares(ano)
+    if not estados:
+        return f"Nenhum estado com eleição suplementar em {ano}."
+    return f"Estados com eleições suplementares em {ano}: {', '.join(sorted(estados))}"
+
+
 async def listar_cargos(eleicao_id: int, municipio: int) -> str:
     """Lista os cargos disponíveis em um município para uma eleição.
 

@@ -14,13 +14,17 @@ from .tools import (
     listar_candidatos,
     listar_cargos,
     listar_eleicoes,
+    listar_eleicoes_suplementares,
+    listar_estados_suplementares,
 )
 
 mcp = FastMCP("mcp-brasil-tse")
 
-# Tools (6)
+# Tools (8)
 mcp.tool(anos_eleitorais)
 mcp.tool(listar_eleicoes)
+mcp.tool(listar_eleicoes_suplementares)
+mcp.tool(listar_estados_suplementares)
 mcp.tool(listar_cargos)
 mcp.tool(listar_candidatos)
 mcp.tool(buscar_candidato)
