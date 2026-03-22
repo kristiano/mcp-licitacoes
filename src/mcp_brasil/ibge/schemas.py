@@ -67,3 +67,40 @@ class AgregadoValor(BaseModel):
     localidade_id: str
     localidade_nome: str
     valor: str | None = None
+
+
+class MalhaMetadados(BaseModel):
+    """Metadados geográficos de uma malha IBGE."""
+
+    id: str
+    nivel_geografico: str
+    centroide_lat: float
+    centroide_lon: float
+    area_km2: float | None = None
+    bbox_min_lon: float | None = None
+    bbox_min_lat: float | None = None
+    bbox_max_lon: float | None = None
+    bbox_max_lat: float | None = None
+
+
+class CnaeSubclasse(BaseModel):
+    """Subclasse CNAE com hierarquia completa."""
+
+    id: str
+    descricao: str
+    classe_id: str = ""
+    classe_descricao: str = ""
+    grupo_id: str = ""
+    grupo_descricao: str = ""
+    divisao_id: str = ""
+    divisao_descricao: str = ""
+    secao_id: str = ""
+    secao_descricao: str = ""
+    atividades: list[str] = Field(default_factory=list)
+
+
+class CnaeSecao(BaseModel):
+    """Seção da CNAE (nível mais alto da hierarquia)."""
+
+    id: str
+    descricao: str

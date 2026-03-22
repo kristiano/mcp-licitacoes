@@ -9,6 +9,8 @@
 
 Os ADRs são a fonte de verdade para todas as decisões de arquitetura.
 
+**Sempre use a skill `/fastmcp`** ao criar ou modificar qualquer coisa relacionada a MCP (tools, resources, prompts, servers, composição, testes de MCP, etc.). A skill contém a documentação completa do FastMCP v3 e garante que o código siga as práticas corretas.
+
 ## TECH_DEBT.md — Débito técnico interativo
 
 O arquivo `TECH_DEBT.md` é o registro vivo de débitos técnicos do projeto.

@@ -18,8 +18,25 @@ from typing import Any
 
 from mcp_brasil._shared.http_client import http_get
 
-from .constants import AGREGADOS_URL, LOCALIDADES_URL, NIVEIS_TERRITORIAIS, NOMES_URL
-from .schemas import AgregadoValor, Estado, Municipio, NomeConsulta, RankingResult, Regiao
+from .constants import (
+    AGREGADOS_URL,
+    CNAE_URL,
+    LOCALIDADES_URL,
+    MALHAS_URL,
+    NIVEIS_TERRITORIAIS,
+    NOMES_URL,
+)
+from .schemas import (
+    AgregadoValor,
+    CnaeSecao,
+    CnaeSubclasse,
+    Estado,
+    MalhaMetadados,
+    Municipio,
+    NomeConsulta,
+    RankingResult,
+    Regiao,
+)
 
 
 async def listar_estados() -> list[Estado]:
@@ -148,3 +165,83 @@ async def listar_pesquisas() -> list[dict[str, Any]]:
     """
     data: list[dict[str, Any]] = await http_get(AGREGADOS_URL)
     return data
+
+
+def _malha_tipo(codigo: str) -> str:
+    """Infer geographic entity type from IBGE code for the malha API path."""
+    codigo = codigo.strip().upper()
+    if codigo == "BR":
+        return "paises"
+    if len(codigo) == 1:
+        return "regioes"
+    if len(codigo) == 2:
+        return "estados"
+    return "municipios"
+
+
+async def buscar_malha_metadados(codigo: str) -> MalhaMetadados:
+    """Fetch geographic metadata for a region (state, municipality, etc).
+
+    API: GET /v3/malhas/{tipo}/{codigo}/metadados
+
+    Args:
+        codigo: IBGE code (e.g. "35" for SP, "3550308" for São Paulo city).
+    """
+    tipo = _malha_tipo(codigo)
+    raw: list[dict[str, Any]] = await http_get(f"{MALHAS_URL}/{tipo}/{codigo}/metadados")
+    item: dict[str, Any] = raw[0] if isinstance(raw, list) and raw else raw  # type: ignore[assignment]
+
+    centroide = item.get("centroide", {})
+    bbox = item.get("regiao-limitrofe", [{}] * 2)
+    area = item.get("area", {})
+
+    return MalhaMetadados(
+        id=str(item.get("id", codigo)),
+        nivel_geografico=item.get("nivel-geografico", "Desconhecido"),
+        centroide_lat=centroide.get("latitude", 0),
+        centroide_lon=centroide.get("longitude", 0),
+        area_km2=float(area.get("dimensao", 0)) if area.get("dimensao") else None,
+        bbox_min_lon=bbox[0].get("longitude") if len(bbox) > 0 else None,
+        bbox_min_lat=bbox[0].get("latitude") if len(bbox) > 0 else None,
+        bbox_max_lon=bbox[1].get("longitude") if len(bbox) > 1 else None,
+        bbox_max_lat=bbox[1].get("latitude") if len(bbox) > 1 else None,
+    )
+
+
+async def buscar_cnae_subclasse(codigo: str) -> CnaeSubclasse:
+    """Fetch CNAE subclass details with full hierarchy.
+
+    API: GET /v2/cnae/subclasses/{codigo}
+
+    Args:
+        codigo: CNAE code (e.g. "9430800", "6201501").
+    """
+    data: dict[str, Any] = await http_get(f"{CNAE_URL}/subclasses/{codigo}")
+
+    classe = data.get("classe", {})
+    grupo = classe.get("grupo", {})
+    divisao = grupo.get("divisao", {})
+    secao = divisao.get("secao", {})
+
+    return CnaeSubclasse(
+        id=data.get("id", codigo),
+        descricao=data.get("descricao", ""),
+        classe_id=classe.get("id", ""),
+        classe_descricao=classe.get("descricao", ""),
+        grupo_id=grupo.get("id", ""),
+        grupo_descricao=grupo.get("descricao", ""),
+        divisao_id=divisao.get("id", ""),
+        divisao_descricao=divisao.get("descricao", ""),
+        secao_id=secao.get("id", ""),
+        secao_descricao=secao.get("descricao", ""),
+        atividades=[a.strip() for a in data.get("atividades", [])],
+    )
+
+
+async def listar_cnae_secoes() -> list[CnaeSecao]:
+    """Fetch all 21 CNAE sections (top-level classification).
+
+    API: GET /v2/cnae/secoes
+    """
+    data: list[dict[str, Any]] = await http_get(f"{CNAE_URL}/secoes")
+    return [CnaeSecao(id=s["id"], descricao=s["descricao"]) for s in data]

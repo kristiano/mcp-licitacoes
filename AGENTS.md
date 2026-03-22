@@ -12,6 +12,8 @@ Cada agente tem um papel, responsabilidades e checklists claros.
 
 Os ADRs são a fonte de verdade. Nenhuma implementação deve contradizê-los.
 
+**Sempre use a skill `/fastmcp`** ao criar ou modificar qualquer coisa relacionada a MCP (tools, resources, prompts, servers, composição, testes de MCP, etc.). A skill contém a documentação completa do FastMCP v3 e garante que o código siga as práticas corretas.
+
 **Sempre mantenha o `TECH_DEBT.md` atualizado:**
 - Ao encontrar bug, incompatibilidade, mock, ou implementação parcial → adicione item `[ ]`
 - Ao resolver um débito → marque como `[x]` com nota do que foi feito

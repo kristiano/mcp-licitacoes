@@ -94,13 +94,30 @@ SERIES_POPULARES: list[SerieBCB] = [
     SerieBCB(21640, "Taxa de câmbio - Yuan Chinês (compra)", "Câmbio", "Diária"),
     # ==================== PIB E ATIVIDADE ECONÔMICA ====================
     SerieBCB(4380, "PIB mensal - Valores correntes (R$ milhões)", "Atividade Econômica", "Mensal"),
-    SerieBCB(4381, "PIB acumulado no ano - Valores correntes (R$ milhões)", "Atividade Econômica", "Mensal"),
-    SerieBCB(4382, "PIB acumulado dos últimos 12 meses (R$ milhões)", "Atividade Econômica", "Mensal"),
+    SerieBCB(
+        4381,
+        "PIB acumulado no ano - Valores correntes (R$ milhões)",
+        "Atividade Econômica",
+        "Mensal",
+    ),
+    SerieBCB(
+        4382, "PIB acumulado dos últimos 12 meses (R$ milhões)", "Atividade Econômica", "Mensal"
+    ),
     SerieBCB(4385, "PIB mensal em US$ (milhões)", "Atividade Econômica", "Mensal"),
     SerieBCB(4386, "PIB acumulado no ano em US$ (milhões)", "Atividade Econômica", "Mensal"),
     SerieBCB(7324, "PIB anual em US$ (milhões)", "Atividade Econômica", "Anual"),
-    SerieBCB(24363, "IBC-Br - Índice de Atividade Econômica (sem ajuste)", "Atividade Econômica", "Mensal"),
-    SerieBCB(24364, "IBC-Br - Índice de Atividade Econômica (com ajuste sazonal)", "Atividade Econômica", "Mensal"),
+    SerieBCB(
+        24363,
+        "IBC-Br - Índice de Atividade Econômica (sem ajuste)",
+        "Atividade Econômica",
+        "Mensal",
+    ),
+    SerieBCB(
+        24364,
+        "IBC-Br - Índice de Atividade Econômica (com ajuste sazonal)",
+        "Atividade Econômica",
+        "Mensal",
+    ),
     SerieBCB(29601, "IBC-Br - Agropecuária (sem ajuste)", "Atividade Econômica", "Mensal"),
     SerieBCB(29602, "IBC-Br - Agropecuária (com ajuste sazonal)", "Atividade Econômica", "Mensal"),
     SerieBCB(29603, "IBC-Br - Indústria (sem ajuste)", "Atividade Econômica", "Mensal"),
@@ -108,14 +125,29 @@ SERIES_POPULARES: list[SerieBCB] = [
     SerieBCB(29605, "IBC-Br - Serviços (sem ajuste)", "Atividade Econômica", "Mensal"),
     SerieBCB(29606, "IBC-Br - Serviços (com ajuste sazonal)", "Atividade Econômica", "Mensal"),
     SerieBCB(22099, "PIB trimestral - Taxa de variação (%)", "Atividade Econômica", "Trimestral"),
-    SerieBCB(22103, "Exportação de bens e serviços - Trimestral", "Atividade Econômica", "Trimestral"),
-    SerieBCB(22104, "Importação de bens e serviços - Trimestral", "Atividade Econômica", "Trimestral"),
+    SerieBCB(
+        22103, "Exportação de bens e serviços - Trimestral", "Atividade Econômica", "Trimestral"
+    ),
+    SerieBCB(
+        22104, "Importação de bens e serviços - Trimestral", "Atividade Econômica", "Trimestral"
+    ),
     SerieBCB(22109, "Consumo das famílias - Trimestral", "Atividade Econômica", "Trimestral"),
     SerieBCB(22110, "Consumo do governo - Trimestral", "Atividade Econômica", "Trimestral"),
-    SerieBCB(22111, "Formação bruta de capital fixo - Trimestral", "Atividade Econômica", "Trimestral"),
-    SerieBCB(21859, "Produção industrial - Geral - Variação mensal", "Atividade Econômica", "Mensal"),
-    SerieBCB(21860, "Produção industrial - Geral - Variação acum. 12 meses", "Atividade Econômica", "Mensal"),
-    SerieBCB(21862, "Utilização da capacidade instalada - Indústria", "Atividade Econômica", "Mensal"),
+    SerieBCB(
+        22111, "Formação bruta de capital fixo - Trimestral", "Atividade Econômica", "Trimestral"
+    ),
+    SerieBCB(
+        21859, "Produção industrial - Geral - Variação mensal", "Atividade Econômica", "Mensal"
+    ),
+    SerieBCB(
+        21860,
+        "Produção industrial - Geral - Variação acum. 12 meses",
+        "Atividade Econômica",
+        "Mensal",
+    ),
+    SerieBCB(
+        21862, "Utilização da capacidade instalada - Indústria", "Atividade Econômica", "Mensal"
+    ),
     # ==================== EMPREGO ====================
     SerieBCB(24369, "Taxa de desocupação - PNAD Contínua", "Emprego", "Mensal"),
     SerieBCB(28763, "Taxa de desocupação - PNAD Contínua - Trimestral", "Emprego", "Trimestral"),
@@ -135,17 +167,29 @@ SERIES_POPULARES: list[SerieBCB] = [
     SerieBCB(5364, "Receita total do governo central", "Fiscal", "Mensal"),
     SerieBCB(5793, "Despesa total do governo central", "Fiscal", "Mensal"),
     # ==================== SETOR EXTERNO ====================
-    SerieBCB(3546, "Reservas internacionais - Conceito liquidez - Total", "Setor Externo", "Diária"),
-    SerieBCB(13621, "Reservas internacionais - Conceito liquidez - Mensal", "Setor Externo", "Mensal"),
+    SerieBCB(
+        3546, "Reservas internacionais - Conceito liquidez - Total", "Setor Externo", "Diária"
+    ),
+    SerieBCB(
+        13621, "Reservas internacionais - Conceito liquidez - Mensal", "Setor Externo", "Mensal"
+    ),
     SerieBCB(22707, "Balança comercial - Saldo mensal (US$ milhões)", "Setor Externo", "Mensal"),
     SerieBCB(22708, "Exportação de bens - Mensal (US$ milhões)", "Setor Externo", "Mensal"),
     SerieBCB(22709, "Importação de bens - Mensal (US$ milhões)", "Setor Externo", "Mensal"),
-    SerieBCB(22714, "Balança comercial - Saldo acum. 12 meses (US$ milhões)", "Setor Externo", "Mensal"),
-    SerieBCB(22701, "Transações correntes - Saldo mensal (US$ milhões)", "Setor Externo", "Mensal"),
-    SerieBCB(22704, "Transações correntes - Saldo acum. 12 meses (% PIB)", "Setor Externo", "Mensal"),
+    SerieBCB(
+        22714, "Balança comercial - Saldo acum. 12 meses (US$ milhões)", "Setor Externo", "Mensal"
+    ),
+    SerieBCB(
+        22701, "Transações correntes - Saldo mensal (US$ milhões)", "Setor Externo", "Mensal"
+    ),
+    SerieBCB(
+        22704, "Transações correntes - Saldo acum. 12 meses (% PIB)", "Setor Externo", "Mensal"
+    ),
     SerieBCB(22715, "Serviços - Saldo mensal (US$ milhões)", "Setor Externo", "Mensal"),
     SerieBCB(22716, "Renda primária - Saldo mensal (US$ milhões)", "Setor Externo", "Mensal"),
-    SerieBCB(22846, "Investimento direto no país - Mensal (US$ milhões)", "Setor Externo", "Mensal"),
+    SerieBCB(
+        22846, "Investimento direto no país - Mensal (US$ milhões)", "Setor Externo", "Mensal"
+    ),
     SerieBCB(22885, "Investimento em carteira - Mensal (US$ milhões)", "Setor Externo", "Mensal"),
     SerieBCB(13690, "Dívida externa total (US$ milhões)", "Setor Externo", "Mensal"),
     # ==================== CRÉDITO ====================
@@ -163,7 +207,9 @@ SERIES_POPULARES: list[SerieBCB] = [
     SerieBCB(20740, "Taxa média de juros - Crédito recursos livres - PF", "Crédito", "Mensal"),
     SerieBCB(20749, "Taxa média de juros - Aquisição de veículos - PF", "Crédito", "Mensal"),
     SerieBCB(20772, "Taxa média de juros - Financiamento imobiliário - PF", "Crédito", "Mensal"),
-    SerieBCB(25497, "Taxa média de juros - Financ. imobiliário taxas mercado", "Crédito", "Mensal"),
+    SerieBCB(
+        25497, "Taxa média de juros - Financ. imobiliário taxas mercado", "Crédito", "Mensal"
+    ),
     SerieBCB(20783, "Spread médio - Crédito total", "Crédito", "Mensal"),
     SerieBCB(20785, "Spread médio - Crédito PF", "Crédito", "Mensal"),
     SerieBCB(20786, "Spread médio - Crédito PJ", "Crédito", "Mensal"),
@@ -175,11 +221,24 @@ SERIES_POPULARES: list[SerieBCB] = [
     SerieBCB(13685, "Inadimplência - Instituições financeiras privadas", "Crédito", "Mensal"),
     # ==================== AGREGADOS MONETÁRIOS ====================
     SerieBCB(1788, "Base monetária - Saldo fim de período", "Agregados Monetários", "Mensal"),
-    SerieBCB(1833, "Base monetária ampliada - M4 - Saldo fim de período", "Agregados Monetários", "Mensal"),
-    SerieBCB(27788, "Meios de pagamento - M1 - Saldo fim de período", "Agregados Monetários", "Mensal"),
-    SerieBCB(27789, "Meios de pagamento - M2 - Saldo fim de período", "Agregados Monetários", "Mensal"),
-    SerieBCB(27790, "Meios de pagamento - M3 - Saldo fim de período", "Agregados Monetários", "Mensal"),
-    SerieBCB(27791, "Meios de pagamento - M4 - Saldo fim de período", "Agregados Monetários", "Mensal"),
+    SerieBCB(
+        1833,
+        "Base monetária ampliada - M4 - Saldo fim de período",
+        "Agregados Monetários",
+        "Mensal",
+    ),
+    SerieBCB(
+        27788, "Meios de pagamento - M1 - Saldo fim de período", "Agregados Monetários", "Mensal"
+    ),
+    SerieBCB(
+        27789, "Meios de pagamento - M2 - Saldo fim de período", "Agregados Monetários", "Mensal"
+    ),
+    SerieBCB(
+        27790, "Meios de pagamento - M3 - Saldo fim de período", "Agregados Monetários", "Mensal"
+    ),
+    SerieBCB(
+        27791, "Meios de pagamento - M4 - Saldo fim de período", "Agregados Monetários", "Mensal"
+    ),
     SerieBCB(27815, "Multiplicador monetário - Base para M4", "Agregados Monetários", "Mensal"),
     SerieBCB(7530, "Multiplicador monetário - Média do mês", "Agregados Monetários", "Mensal"),
     # ==================== POUPANÇA ====================
@@ -190,8 +249,12 @@ SERIES_POPULARES: list[SerieBCB] = [
     SerieBCB(7167, "Poupança - Retiradas", "Poupança", "Mensal"),
     # ==================== ÍNDICES DE MERCADO ====================
     SerieBCB(12466, "IMA-B - Índice de Mercado ANBIMA (Base)", "Índices de Mercado", "Diária"),
-    SerieBCB(12467, "IMA-B5 - Índice de Mercado ANBIMA (até 5 anos)", "Índices de Mercado", "Diária"),
-    SerieBCB(12468, "IMA-B5+ - Índice de Mercado ANBIMA (acima 5 anos)", "Índices de Mercado", "Diária"),
+    SerieBCB(
+        12467, "IMA-B5 - Índice de Mercado ANBIMA (até 5 anos)", "Índices de Mercado", "Diária"
+    ),
+    SerieBCB(
+        12468, "IMA-B5+ - Índice de Mercado ANBIMA (acima 5 anos)", "Índices de Mercado", "Diária"
+    ),
     SerieBCB(7832, "Ibovespa - Índice mensal", "Índices de Mercado", "Mensal"),
     # ==================== EXPECTATIVAS (Focus) ====================
     SerieBCB(29033, "Expectativa IPCA - Mediana - Ano corrente", "Expectativas", "Semanal"),
@@ -222,11 +285,7 @@ def _normalize(text: str) -> str:
 def buscar_series_por_termo(termo: str) -> list[SerieBCB]:
     """Search catalog by term (accent-insensitive, matches name or category)."""
     t = _normalize(termo)
-    return [
-        s
-        for s in SERIES_POPULARES
-        if t in _normalize(s.nome) or t in _normalize(s.categoria)
-    ]
+    return [s for s in SERIES_POPULARES if t in _normalize(s.nome) or t in _normalize(s.categoria)]
 
 
 def listar_por_categoria(categoria: str | None = None) -> dict[str, list[SerieBCB]]:

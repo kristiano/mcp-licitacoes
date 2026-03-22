@@ -26,6 +26,13 @@
 
 - [ ] **Response size limiting for LLM context** — APIs can return huge payloads (e.g., 5000+ municipios). Need a strategy to truncate/summarize responses to avoid blowing LLM context windows. See `_shared/formatting.py:truncate_list` as starting point.
 
+## Transparência Feature
+
+- [ ] **API response shapes unverified** — Parsing helpers (`_parse_*` in `client.py`) are based on API docs and reference code. Real API responses may have different field names or nesting. All schema fields are `| None` to handle this gracefully, but field mappings need validation with real API calls.
+- [ ] **Rate limiting not enforced client-side** — Portal da Transparência has 90 req/min (06h-23h59) and 300 req/min (00h-05h59) limits. Currently relying on `http_get()` retry for 429, but no proactive throttling.
+- [ ] **Pagination not automatic** — All tools accept `pagina` but don't auto-paginate. Users must manually request subsequent pages.
+- [ ] **Pre-existing mypy errors in lifespan.py and ibge/client.py** — 7 type errors unrelated to transparencia. Transparencia passes mypy clean.
+
 ## Known Limitations
 
 - [ ] **No CONTRIBUTING.md** — Mentioned in roadmap Semana 0 but not yet created.

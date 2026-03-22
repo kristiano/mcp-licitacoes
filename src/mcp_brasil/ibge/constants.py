@@ -5,6 +5,8 @@ IBGE_API_BASE = "https://servicodados.ibge.gov.br/api"
 LOCALIDADES_URL = f"{IBGE_API_BASE}/v1/localidades"
 NOMES_URL = f"{IBGE_API_BASE}/v2/censos/nomes"
 AGREGADOS_URL = f"{IBGE_API_BASE}/v3/agregados"
+CNAE_URL = f"{IBGE_API_BASE}/v2/cnae"
+MALHAS_URL = f"{IBGE_API_BASE}/v3/malhas"
 
 # Níveis territoriais para a API de agregados
 # Formato: N{nivel}[{localidade}] ou N{nivel}[all]
