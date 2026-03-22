@@ -29,14 +29,14 @@
 ## Transparência Feature
 
 - [x] **Resources e prompts faltando** — Feature tinha apenas tools/client/schemas. Adicionados resources.py (endpoints, bases de sanções, info da API) e prompts.py (auditoria_fornecedor, analise_despesas, verificacao_compliance) + server.py atualizado + 27 testes novos.
-- [ ] **API response shapes unverified** — Parsing helpers (`_parse_*` in `client.py`) are based on API docs and reference code. Real API responses may have different field names or nesting. All schema fields are `| None` to handle this gracefully, but field mappings need validation with real API calls.
-- [ ] **Rate limiting not enforced client-side** — Portal da Transparência has 90 req/min (06h-23h59) and 300 req/min (00h-05h59) limits. Currently relying on `http_get()` retry for 429, but no proactive throttling.
-- [ ] **Pagination not automatic** — All tools accept `pagina` but don't auto-paginate. Users must manually request subsequent pages.
-- [ ] **Pre-existing mypy errors in lifespan.py and ibge/client.py** — 7 type errors unrelated to transparencia. Transparencia passes mypy clean.
+- [x] **API response shapes unverified** — Resolvido. Adicionado `_safe_parse_list()` com logging de warning para respostas inesperadas, guards em `_parse_bolsa_*` contra strings no lugar de dicts, e 20+ testes de edge cases (non-list, null fields, string fields).
+- [x] **Rate limiting not enforced client-side** — Resolvido. Adicionado `_shared/rate_limiter.py` (sliding window 80 req/min) aplicado via `_get()`. `buscar_sancoes` refatorado para usar `_get()` ao invés de `http_get()` direto.
+- [x] **Pagination not automatic** — Resolvido. Adicionado `_pagination_hint()` em tools.py que mostra "Use pagina=N+1" quando resultados >= DEFAULT_PAGE_SIZE e "Última página" quando < PAGE_SIZE em pagina > 1.
+- [x] **Pre-existing mypy errors in lifespan.py and ibge/client.py** — Resolvido. mypy passa limpo em todos os 35+ arquivos.
 
 ## Known Limitations
 
-- [ ] **No CONTRIBUTING.md** — Mentioned in roadmap Semana 0 but not yet created.
+- [x] **No CONTRIBUTING.md** — Resolvido. CONTRIBUTING.md criado com getting started, estrutura, como adicionar features, convenções, testes e PR guidelines.
 
 ---
 
