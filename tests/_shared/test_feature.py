@@ -89,14 +89,20 @@ class TestFeatureRegistry:
     def test_discover_returns_self_for_chaining(self) -> None:
         """discover() retorna self para permitir chaining."""
         registry = FeatureRegistry()
-        result = registry.discover()
+        result = registry.discover("mcp_brasil.data")
         assert result is registry
 
     def test_discover_finds_ibge(self) -> None:
-        """Discovery encontra a feature ibge."""
+        """Discovery encontra a feature ibge in data package."""
         registry = FeatureRegistry()
-        registry.discover()
+        registry.discover("mcp_brasil.data")
         assert "ibge" in registry.features
+
+    def test_discover_finds_redator(self) -> None:
+        """Discovery encontra a feature redator in agentes package."""
+        registry = FeatureRegistry()
+        registry.discover("mcp_brasil.agentes")
+        assert "redator" in registry.features
 
     def test_summary_empty(self) -> None:
         registry = FeatureRegistry()

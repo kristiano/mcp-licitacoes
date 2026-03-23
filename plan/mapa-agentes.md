@@ -268,11 +268,11 @@ SEMANA   AGENTE                      DEPENDE DE
 ## Como contribuidores adicionam novos agentes
 
 ```bash
-# 1. Criar diretório com a convenção
-mkdir -p src/mcp_brasil/novo_agente/{templates,normas}
+# 1. Criar diretório com a convenção (dentro de agentes/)
+mkdir -p src/mcp_brasil/agentes/novo_agente/{templates,normas}
 
 # 2. __init__.py com FEATURE_META
-cat > src/mcp_brasil/novo_agente/__init__.py << 'EOF'
+cat > src/mcp_brasil/agentes/novo_agente/__init__.py << 'EOF'
 from mcp_brasil._shared.feature import FeatureMeta
 FEATURE_META = FeatureMeta(
     name="novo_agente",

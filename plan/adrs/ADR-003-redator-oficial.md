@@ -75,7 +75,8 @@ Resultado:
 
 ```
 src/mcp_brasil/
-├── redator/                    # ★ Nova feature auto-descoberta
+├── agentes/
+│   └── redator/                # ★ Feature de agente auto-descoberta
 │   ├── __init__.py             # FEATURE_META
 │   ├── server.py               # Registra tools + prompts + resources
 │   ├── tools.py                # Funções de geração e validação
@@ -101,7 +102,7 @@ src/mcp_brasil/
 
 ## Implementação
 
-### 1. Feature Meta — `redator/__init__.py`
+### 1. Feature Meta — `agentes/redator/__init__.py`
 
 ```python
 """Feature Redator Oficial — Geração de documentos oficiais."""
@@ -117,7 +118,7 @@ FEATURE_META = FeatureMeta(
 )
 ```
 
-### 2. Templates como Resources — `redator/resources.py`
+### 2. Templates como Resources — `agentes/redator/resources.py`
 
 ```python
 """Resources: templates e normas de redação oficial.
@@ -195,7 +196,7 @@ def get_fechos_oficiais() -> str:
     return _load_file(NORMAS_DIR, "fechos.md")
 ```
 
-### 3. Prompts como "Agentes" — `redator/prompts.py`
+### 3. Prompts como "Agentes" — `agentes/redator/prompts.py`
 
 ```python
 """Prompts: agentes especializados por tipo de documento.
@@ -451,7 +452,7 @@ Instruções:
     ]
 ```
 
-### 4. Tools — `redator/tools.py`
+### 4. Tools — `agentes/redator/tools.py`
 
 ```python
 """Tools: funções executáveis para geração e validação de documentos.
@@ -808,7 +809,7 @@ async def listar_tipos_documento() -> str:
     return "\n".join(linhas)
 ```
 
-### 5. Server — `redator/server.py`
+### 5. Server — `agentes/redator/server.py`
 
 ```python
 """Server do Redator Oficial.
@@ -877,7 +878,7 @@ mcp.resource("normas://pronomes")(get_pronomes_tratamento)
 mcp.resource("normas://fechos")(get_fechos_oficiais)
 ```
 
-### 6. Template exemplo — `redator/templates/despacho.md`
+### 6. Template exemplo — `agentes/redator/templates/despacho.md`
 
 ```markdown
 # MODELO: DESPACHO

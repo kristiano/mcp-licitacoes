@@ -119,7 +119,7 @@ make serve
 
 O projeto usa **Package by Feature** com **Auto-Registry**:
 
-- Cada API é uma feature auto-contida em `src/mcp_brasil/{feature}/`
+- Features são organizadas em `data/` (APIs) e `agentes/` (agentes inteligentes)
 - O server raiz descobre e monta features automaticamente via `FeatureRegistry`
 - Para adicionar uma nova feature, basta criar o diretório seguindo a convenção
 
@@ -128,14 +128,18 @@ src/mcp_brasil/
 ├── server.py              # Auto-registry (nunca muda)
 ├── _shared/               # Utilitários compartilhados
 │   └── feature.py         # FeatureMeta + FeatureRegistry
-├── ibge/                  # Feature: IBGE
-│   ├── __init__.py        # FEATURE_META
-│   ├── server.py          # mcp: FastMCP
-│   ├── tools.py           # Lógica das tools
-│   ├── client.py          # HTTP async
-│   ├── schemas.py         # Pydantic models
-│   └── constants.py       # URLs, códigos
-├── bacen/                 # Feature: Banco Central
+├── data/                  # Features de consulta a APIs
+│   ├── ibge/              # Feature: IBGE
+│   │   ├── __init__.py    # FEATURE_META
+│   │   ├── server.py      # mcp: FastMCP
+│   │   ├── tools.py       # Lógica das tools
+│   │   ├── client.py      # HTTP async
+│   │   ├── schemas.py     # Pydantic models
+│   │   └── constants.py   # URLs, códigos
+│   ├── bacen/             # Feature: Banco Central
+│   └── ...
+├── agentes/               # Features de agentes inteligentes
+│   └── redator/           # Feature: Redator Oficial
 └── ...
 ```
 
@@ -170,10 +174,10 @@ make clean          # Limpar caches
 
 ## Como contribuir
 
-1. Crie um diretório em `src/mcp_brasil/{feature}/` seguindo a estrutura padrão
+1. Crie um diretório em `src/mcp_brasil/data/{feature}/` (APIs) ou `src/mcp_brasil/agentes/{feature}/` (agentes)
 2. Exporte `FEATURE_META` no `__init__.py`
 3. Exporte `mcp: FastMCP` no `server.py`
-4. Adicione testes em `tests/{feature}/`
+4. Adicione testes em `tests/data/{feature}/` ou `tests/agentes/{feature}/`
 5. Rode `make ci` e abra um PR
 
 Consulte `AGENTS.md` e `docs/adrs/` para padrões e decisões de arquitetura.

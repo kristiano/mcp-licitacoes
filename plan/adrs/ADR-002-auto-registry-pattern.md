@@ -159,7 +159,8 @@ class FeatureRegistry:
 
         mcp = FastMCP("mcp-brasil 🇧🇷")
         registry = FeatureRegistry()
-        registry.discover()
+        registry.discover("mcp_brasil.data")
+        registry.discover("mcp_brasil.agentes")
         registry.mount_all(mcp)
     """
 
@@ -280,7 +281,7 @@ class FeatureRegistry:
         return "\n".join(lines)
 ```
 
-### 2. Feature exemplo — `src/mcp_brasil/ibge/__init__.py`
+### 2. Feature exemplo — `src/mcp_brasil/data/ibge/__init__.py`
 
 ```python
 """Feature IBGE — Instituto Brasileiro de Geografia e Estatística."""
@@ -297,7 +298,7 @@ FEATURE_META = FeatureMeta(
 )
 ```
 
-### 3. Feature com auth — `src/mcp_brasil/transparencia/__init__.py`
+### 3. Feature com auth — `src/mcp_brasil/data/transparencia/__init__.py`
 
 ```python
 """Feature Portal da Transparência — Governo Federal."""
@@ -381,9 +382,10 @@ class RequestLoggingMiddleware(Middleware):
 mcp = FastMCP("mcp-brasil 🇧🇷", lifespan=http_lifespan)
 mcp.add_middleware(RequestLoggingMiddleware())
 
-# Auto-discovery: escaneia todos os subpacotes com FEATURE_META
+# Auto-discovery: escaneia subpacotes de data/ e agentes/
 registry = FeatureRegistry()
-registry.discover()
+registry.discover("mcp_brasil.data")
+registry.discover("mcp_brasil.agentes")
 registry.mount_all(mcp)
 
 logger.info("\n%s", registry.summary())
@@ -395,11 +397,11 @@ if __name__ == "__main__":
 ### 5. Como adicionar uma nova feature (zero-touch no server raiz)
 
 ```bash
-# 1. Criar o diretório com a estrutura padrão
-mkdir -p src/mcp_brasil/inep
+# 1. Criar o diretório com a estrutura padrão (dentro de data/ para APIs)
+mkdir -p src/mcp_brasil/data/inep
 
 # 2. Criar __init__.py com FEATURE_META
-cat > src/mcp_brasil/inep/__init__.py << 'EOF'
+cat > src/mcp_brasil/data/inep/__init__.py << 'EOF'
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
@@ -431,17 +433,20 @@ fastmcp run mcp_brasil.server:mcp
 fastmcp run mcp_brasil.server:mcp
           │
           ▼
-   FeatureRegistry.discover()
+   FeatureRegistry.discover("mcp_brasil.data")
+   FeatureRegistry.discover("mcp_brasil.agentes")
           │
           ▼
-   pkgutil.iter_modules(mcp_brasil)
+   pkgutil.iter_modules(mcp_brasil.data)
           │
           ├── ibge/          → tem FEATURE_META? ✅ → tem server.mcp? ✅ → REGISTRA
           ├── bacen/         → tem FEATURE_META? ✅ → tem server.mcp? ✅ → REGISTRA
           ├── transparencia/ → tem FEATURE_META? ✅ → auth ok? ✅        → REGISTRA
           ├── camara/        → tem FEATURE_META? ✅ → tem server.mcp? ✅ → REGISTRA
-          ├── _shared/       → começa com _? SIM → PULA
           └── datajud/       → tem FEATURE_META? ✅ → auth ok? ❌        → PULA (log warning)
+   pkgutil.iter_modules(mcp_brasil.agentes)
+          │
+          └── redator/       → tem FEATURE_META? ✅ → tem server.mcp? ✅ → REGISTRA
           │
           ▼
    FeatureRegistry.mount_all(mcp)
@@ -464,7 +469,7 @@ fastmcp run mcp_brasil.server:mcp
 
 Para uma feature ser auto-descoberta, ela **precisa**:
 
-1. ☐ Ser um subpacote de `src/mcp_brasil/` (diretório com `__init__.py`)
+1. ☐ Ser um subpacote de `src/mcp_brasil/data/` ou `src/mcp_brasil/agentes/` (diretório com `__init__.py`)
 2. ☐ **Não** começar com `_` (underscore = privado)
 3. ☐ Ter `FEATURE_META: FeatureMeta` exportado no `__init__.py`
 4. ☐ Ter `mcp: FastMCP` exportado no `server.py`
@@ -484,7 +489,7 @@ Para uma feature **não** ser descoberta:
 |-----------|----------------------|
 | **Onboarding rápido** | Cria diretório, segue template, funciona |
 | **Zero conflitos de merge** | Nunca toca arquivo compartilhado |
-| **Testável isolado** | `fastmcp run mcp_brasil.inep.server:mcp` |
+| **Testável isolado** | `fastmcp run mcp_brasil.data.inep.server:mcp` |
 | **Feature flags grátis** | `enabled=False` no FEATURE_META |
 | **Auth segura** | Features com auth faltante são silenciosamente puladas |
 | **Introspection** | `registry.summary()` lista tudo para docs e CI |

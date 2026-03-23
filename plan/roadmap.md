@@ -29,7 +29,7 @@ fastmcp run mcp_brasil.server:mcp
 
 O `server.py` raiz **nunca é editado**. Ele usa `FeatureRegistry` para:
 
-1. **Escanear** `src/mcp_brasil/` via `pkgutil.iter_modules()` (mesmo padrão do Flask, pytest, Django)
+1. **Escanear** `src/mcp_brasil/data/` e `src/mcp_brasil/agentes/` via `pkgutil.iter_modules()` (mesmo padrão do Flask, pytest, Django)
 2. **Validar** cada subpacote: tem `FEATURE_META`? Tem `server.mcp`? Auth disponível?
 3. **Montar** automaticamente via `FastMCP.mount()` em `/{feature_name}`
 
@@ -40,19 +40,20 @@ from ._shared.feature import FeatureRegistry
 
 mcp = FastMCP("mcp-brasil 🇧🇷")
 registry = FeatureRegistry()
-registry.discover()
+registry.discover("mcp_brasil.data")
+registry.discover("mcp_brasil.agentes")
 registry.mount_all(mcp)
 ```
 
 ### Como adicionar uma feature (zero-touch)
 
 ```bash
-# Basta criar o diretório com a convenção:
-mkdir -p src/mcp_brasil/inep
+# Basta criar o diretório com a convenção (dentro de data/ para APIs):
+mkdir -p src/mcp_brasil/data/inep
 ```
 
 ```python
-# src/mcp_brasil/inep/__init__.py
+# src/mcp_brasil/data/inep/__init__.py
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
@@ -63,7 +64,7 @@ FEATURE_META = FeatureMeta(
 ```
 
 ```python
-# src/mcp_brasil/inep/server.py
+# src/mcp_brasil/data/inep/server.py
 from fastmcp import FastMCP
 from .tools import buscar_escolas, consultar_ideb
 
@@ -90,19 +91,21 @@ src/mcp_brasil/
 │   ├── cache.py           # LRU com TTL
 │   └── formatting.py      # Formatação para LLMs
 │
-├── ibge/                  # ★ Auto-descoberto
-│   ├── __init__.py        # → FEATURE_META (obrigatório)
-│   ├── server.py          # → mcp: FastMCP (obrigatório)
-│   ├── tools.py           # Lógica das tools
-│   ├── client.py          # HTTP async para API
-│   ├── schemas.py         # Pydantic models
-│   └── constants.py       # URLs, IDs fixos
+├── data/                  # Features de consulta a APIs
+│   ├── ibge/              # ★ Auto-descoberto
+│   │   ├── __init__.py    # → FEATURE_META (obrigatório)
+│   │   ├── server.py      # → mcp: FastMCP (obrigatório)
+│   │   ├── tools.py       # Lógica das tools
+│   │   ├── client.py      # HTTP async para API
+│   │   ├── schemas.py     # Pydantic models
+│   │   └── constants.py   # URLs, IDs fixos
+│   ├── bacen/             # ★ Auto-descoberto
+│   ├── transparencia/     # ★ Auto-descoberto (requer API key)
+│   ├── camara/            # ★ Auto-descoberto
+│   └── senado/            # ★ Auto-descoberto
 │
-├── bacen/                 # ★ Auto-descoberto
-├── transparencia/         # ★ Auto-descoberto (requer API key)
-├── camara/                # ★ Auto-descoberto
-├── senado/                # ★ Auto-descoberto
-└── ...                    # Crie um diretório → auto-registrado
+└── agentes/               # Features de agentes inteligentes
+    └── redator/           # ★ Auto-descoberto
 ```
 
 ### Convenção obrigatória para discovery
@@ -111,7 +114,7 @@ src/mcp_brasil/
 |-----------|------|-------|
 | `FEATURE_META` | `__init__.py` | Instância de `FeatureMeta` |
 | `mcp` | `server.py` | Instância de `FastMCP` |
-| Nome do diretório | Raiz de `mcp_brasil/` | Sem prefixo `_` |
+| Nome do diretório | `mcp_brasil/data/` ou `mcp_brasil/agentes/` | Sem prefixo `_` |
 | Auth (se necessário) | Env var | Definida no `auth_env_var` |
 
 ### Fluxo de dependência dentro de cada feature (Clean Code)

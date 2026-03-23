@@ -67,6 +67,7 @@
 - [x] **Nested response shapes** — Candidatos endpoint wraps results in `{"candidatos": [...]}`, cargos in `{"cargos": [...]}`. Handled by extracting nested fields.
 - [ ] **API is unofficial** — DivulgaCandContas API is reverse-engineered. No official documentation. Endpoints may change without notice.
 - [x] **No result totalization** — Resolvido. Adicionada tool `resultado_eleicao` que rankeia candidatos por votos. `buscar_candidato` enriquecido com `descricao_totalizacao` e `total_votos`. Novo modelo `ResultadoCandidato`. 47 testes passam.
+- [ ] **Sem dados de votação por município para eleições federais** — A API DivulgaCandContas do TSE não retorna resultados de votação desagregados por município para cargos federais (presidente, senador, deputado federal). Dados de totalização por município exigem outra fonte (ex: TSE Resultados Web ou dados abertos em CSV).
 
 ## Jurisprudência Feature
 

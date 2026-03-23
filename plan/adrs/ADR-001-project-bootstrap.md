@@ -76,39 +76,28 @@ src/mcp_brasil/
 │   ├── formatting.py        # Formatação de respostas para LLMs
 │   └── types.py             # Tipos compartilhados (TypedDict, Protocols)
 │
-├── ibge/                    # Feature: IBGE
-│   ├── __init__.py          # Re-exports público da feature
-│   ├── server.py            # FastMCP sub-server com tools, resources e prompts
-│   ├── tools.py             # Funções das tools (@mcp.tool) com Context
-│   ├── resources.py         # Resources estáticos (dados de referência)
-│   ├── prompts.py           # Prompts (templates de análise para LLMs)
-│   ├── client.py            # Client HTTP para API do IBGE
-│   ├── schemas.py           # Pydantic models (input/output)
-│   └── constants.py         # URLs, códigos de agregados, enums
-│
-├── bacen/                   # Feature: Banco Central
+├── data/                    # Features de consulta a APIs governamentais
 │   ├── __init__.py
-│   ├── server.py
-│   ├── tools.py
-│   ├── resources.py
-│   ├── prompts.py
-│   ├── client.py
-│   ├── schemas.py
-│   └── constants.py
+│   ├── ibge/                # Feature: IBGE
+│   │   ├── __init__.py      # FEATURE_META + Re-exports
+│   │   ├── server.py        # FastMCP sub-server com tools, resources e prompts
+│   │   ├── tools.py         # Funções das tools (@mcp.tool) com Context
+│   │   ├── resources.py     # Resources estáticos (dados de referência)
+│   │   ├── prompts.py       # Prompts (templates de análise para LLMs)
+│   │   ├── client.py        # Client HTTP para API do IBGE
+│   │   ├── schemas.py       # Pydantic models (input/output)
+│   │   └── constants.py     # URLs, códigos de agregados, enums
+│   ├── bacen/               # Feature: Banco Central
+│   ├── transparencia/       # Feature: Portal da Transparência
+│   ├── camara/              # Feature: Câmara dos Deputados
+│   ├── senado/              # Feature: Senado Federal
+│   ├── dados_abertos/       # Feature: Portal dados.gov.br
+│   ├── datajud/             # Feature: DataJud (CNJ)
+│   └── diario_oficial/      # Feature: Querido Diário
 │
-├── transparencia/           # Feature: Portal da Transparência
-│   ├── __init__.py
-│   ├── server.py
-│   ├── tools.py
-│   ├── client.py
-│   ├── schemas.py
-│   └── constants.py
-│
-├── camara/                  # Feature: Câmara dos Deputados
-├── senado/                  # Feature: Senado Federal
-├── dados_abertos/           # Feature: Portal dados.gov.br
-├── datajud/                 # Feature: DataJud (CNJ)
-└── diario_oficial/          # Feature: Querido Diário
+└── agentes/                 # Features de agentes inteligentes
+    ├── __init__.py
+    └── redator/             # Feature: Redator Oficial (ADR-003)
 ```
 
 **Justificativa:**
@@ -227,7 +216,8 @@ mcp = FastMCP("mcp-brasil 🇧🇷", lifespan=http_lifespan)
 mcp.add_middleware(RequestLoggingMiddleware())
 
 registry = FeatureRegistry()
-registry.discover()
+registry.discover("mcp_brasil.data")
+registry.discover("mcp_brasil.agentes")
 registry.mount_all(mcp)
 ```
 
@@ -317,19 +307,17 @@ asyncio_mode = "auto"
 tests/
 ├── conftest.py              # Fixtures globais (mock HTTP, FastMCP test client)
 ├── test_root_server.py      # Testa server montado (tools, resources, prompts namespaced)
-├── ibge/
-│   ├── test_tools.py        # Testa lógica das tools (mock client)
-│   ├── test_client.py       # Testa client HTTP (respx mock)
-│   ├── test_resources.py    # Testa resources (unit + via Client)
-│   ├── test_prompts.py      # Testa prompts (unit + via Client)
-│   └── test_integration.py  # Testa tool via fastmcp.Client (e2e)
-├── bacen/
-│   ├── test_tools.py
-│   ├── test_client.py
-│   ├── test_resources.py
-│   ├── test_prompts.py
-│   └── test_integration.py
-├── transparencia/
+├── data/
+│   ├── ibge/
+│   │   ├── test_tools.py    # Testa lógica das tools (mock client)
+│   │   ├── test_client.py   # Testa client HTTP (respx mock)
+│   │   ├── test_resources.py# Testa resources (unit + via Client)
+│   │   ├── test_prompts.py  # Testa prompts (unit + via Client)
+│   │   └── test_integration.py
+│   ├── bacen/
+│   └── transparencia/
+├── agentes/
+│   └── redator/
 └── _shared/
     ├── test_cache.py
     ├── test_http_client.py
@@ -346,7 +334,7 @@ tests/
 
 **Consequências:**
 - Cada feature tem seus próprios testes isolados
-- CI roda `pytest tests/ibge/ -v` para PRs que só tocam IBGE
+- CI roda `pytest tests/data/ibge/ -v` para PRs que só tocam IBGE
 
 ---
 
@@ -374,7 +362,7 @@ uv pip install mcp-brasil
 fastmcp run mcp_brasil.server:mcp
 
 # Rodar apenas IBGE
-fastmcp run mcp_brasil.ibge.server:mcp
+fastmcp run mcp_brasil.data.ibge.server:mcp
 
 # Rodar via HTTP
 fastmcp run mcp_brasil.server:mcp --transport http --port 8000

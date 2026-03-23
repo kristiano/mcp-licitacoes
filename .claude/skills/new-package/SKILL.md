@@ -12,7 +12,8 @@ Creates a complete feature package following the project conventions (ADR-001, A
 ## What it creates
 
 ```
-src/mcp_brasil/{feature}/
+src/mcp_brasil/data/{feature}/       # For data/API features
+src/mcp_brasil/agentes/{feature}/    # For agent features
 ├── __init__.py     # FEATURE_META (auto-discovery marker)
 ├── constants.py    # API URLs, enums, codes
 ├── schemas.py      # Pydantic v2 models
@@ -35,10 +36,10 @@ Example invocations:
 
 1. **Parse arguments**: Extract `feature_name`, `api_base` (default `""`), `auth_env_var` (default `None`)
 2. **Validate**: Check the name is snake_case and the directory doesn't already exist
-3. **Create directory**: `src/mcp_brasil/{feature_name}/`
+3. **Create directory**: `src/mcp_brasil/data/{feature_name}/` (for data/API features) or `src/mcp_brasil/agentes/{feature_name}/` (for agent features)
 4. **Write all 8 files** using the templates in [refs/templates.md](refs/templates.md)
-5. **Run lint**: `uv run ruff format src/mcp_brasil/{feature_name}/ && uv run ruff check src/mcp_brasil/{feature_name}/`
-6. **Verify auto-discovery**: `uv run python -c "from mcp_brasil._shared.feature import FeatureRegistry; r = FeatureRegistry(); r.discover(); print(r.summary())"`
+5. **Run lint**: `uv run ruff format src/mcp_brasil/data/{feature_name}/ && uv run ruff check src/mcp_brasil/data/{feature_name}/` (adjust path for agentes)
+6. **Verify auto-discovery**: `uv run python -c "from mcp_brasil._shared.feature import FeatureRegistry; r = FeatureRegistry(); r.discover('mcp_brasil.data'); r.discover('mcp_brasil.agentes'); print(r.summary())"`
 7. **Report**: Show the user which files were created and next steps
 
 ## Architecture rules (inviolable)

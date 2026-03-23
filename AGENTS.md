@@ -212,10 +212,15 @@ Testes espelham a estrutura de `src/`:
 ```
 tests/
 ├── conftest.py                 # Fixtures globais
-├── {feature}/
-│   ├── test_tools.py           # Testa lógica, mock no client
-│   ├── test_client.py          # Testa HTTP com respx
-│   └── test_integration.py    # Testa via fastmcp.Client (e2e)
+├── data/
+│   └── {feature}/
+│       ├── test_tools.py       # Testa lógica, mock no client
+│       ├── test_client.py      # Testa HTTP com respx
+│       └── test_integration.py # Testa via fastmcp.Client (e2e)
+├── agentes/
+│   └── {feature}/
+│       ├── test_tools.py
+│       └── test_integration.py
 └── _shared/
     └── test_feature.py         # Testa FeatureRegistry
 ```
@@ -230,13 +235,13 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from mcp_brasil.{feature}.tools import buscar_{feature}
+from mcp_brasil.data.{feature}.tools import buscar_{feature}
 
 
 @pytest.mark.asyncio
 async def test_buscar_{feature}_retorna_formatado():
     mock_data = [...]  # dados esperados
-    with patch("mcp_brasil.{feature}.tools.buscar_exemplo", new_callable=AsyncMock) as mock:
+    with patch("mcp_brasil.data.{feature}.tools.buscar_exemplo", new_callable=AsyncMock) as mock:
         mock.return_value = mock_data
         resultado = await buscar_{feature}("query")
         assert "esperado" in resultado
@@ -250,8 +255,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.{feature}.client import buscar_exemplo
-from mcp_brasil.{feature}.constants import {FEATURE}_API_BASE
+from mcp_brasil.data.{feature}.client import buscar_exemplo
+from mcp_brasil.data.{feature}.constants import {FEATURE}_API_BASE
 
 
 @pytest.mark.asyncio
@@ -272,7 +277,7 @@ async def test_buscar_exemplo_sucesso():
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.{feature}.server import mcp
+from mcp_brasil.data.{feature}.server import mcp
 
 
 @pytest.mark.asyncio

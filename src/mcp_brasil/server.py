@@ -79,7 +79,8 @@ mcp.add_middleware(RequestLoggingMiddleware())
 
 # Auto-discover and mount all features
 registry = FeatureRegistry()
-registry.discover()
+registry.discover("mcp_brasil.data")
+registry.discover("mcp_brasil.agentes")
 registry.mount_all(mcp)
 
 logger.info("\n%s", registry.summary())

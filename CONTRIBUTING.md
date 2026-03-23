@@ -17,9 +17,12 @@ make ci         # Roda lint + mypy + testes
 src/mcp_brasil/
 ├── server.py           # Server raiz (auto-registry, nunca editado manualmente)
 ├── _shared/            # Código compartilhado (http_client, formatting, cache, rate_limiter)
-├── ibge/               # Feature IBGE
-├── transparencia/      # Feature Portal da Transparência
-└── {nova_feature}/     # Sua nova feature aqui
+├── data/               # Features de consulta a APIs
+│   ├── ibge/           # Feature IBGE
+│   ├── transparencia/  # Feature Portal da Transparência
+│   └── {nova_feature}/ # Sua nova feature de dados aqui
+└── agentes/            # Features de agentes inteligentes
+    └── redator/        # Feature Redator Oficial
 ```
 
 Leia os ADRs em `plan/adrs/` antes de implementar:
@@ -29,10 +32,10 @@ Leia os ADRs em `plan/adrs/` antes de implementar:
 
 ## Como Adicionar uma Nova Feature
 
-1. Crie o diretório `src/mcp_brasil/{feature}/` com os arquivos obrigatórios:
+1. Crie o diretório `src/mcp_brasil/data/{feature}/` (APIs) ou `src/mcp_brasil/agentes/{feature}/` (agentes) com os arquivos obrigatórios:
 
 ```
-src/mcp_brasil/{feature}/
+src/mcp_brasil/data/{feature}/      # ou agentes/{feature}/
 ├── __init__.py     # FEATURE_META (obrigatório para auto-discovery)
 ├── server.py       # mcp: FastMCP (obrigatório)
 ├── tools.py        # Funções das tools
@@ -64,13 +67,13 @@ async def minha_tool(param: str) -> str:
     return await tools.minha_tool(param)
 ```
 
-4. Crie testes em `tests/{feature}/`:
+4. Crie testes em `tests/data/{feature}/` (ou `tests/agentes/{feature}/`):
 
 ```
-tests/{feature}/
-├── test_tools.py        # Mock client, testa lógica
-├── test_client.py       # respx mock HTTP
-└── test_integration.py  # fastmcp.Client e2e
+tests/data/{feature}/         # ou tests/agentes/{feature}/
+├── test_tools.py             # Mock client, testa lógica
+├── test_client.py            # respx mock HTTP
+└── test_integration.py       # fastmcp.Client e2e
 ```
 
 5. Rode `make ci` para verificar que tudo passa.

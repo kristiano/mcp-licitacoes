@@ -49,7 +49,7 @@ Pacote Python que conecta AI agents a dados governamentais (IBGE, Banco Central,
 make sync           # uv sync (prod only)
 make dev            # uv sync --group dev (prod + dev)
 make test           # pytest -v
-make test-feature F=ibge  # pytest tests/ibge/ -v
+make test-feature F=ibge  # pytest tests/data/ibge/ -v
 make lint           # ruff check + format check
 make ruff           # ruff check --fix + format
 make types          # mypy
@@ -68,18 +68,24 @@ O `server.py` raiz **nunca é editado manualmente**. Ele usa `FeatureRegistry` p
 ```python
 mcp = FastMCP("mcp-brasil")
 registry = FeatureRegistry()
-registry.discover()
+registry.discover("mcp_brasil.data")
+registry.discover("mcp_brasil.agentes")
 registry.mount_all(mcp)
 ```
 
-Para adicionar uma feature, basta criar o diretório com a convenção. Nenhum import manual.
+Para adicionar uma feature, basta criar o diretório dentro de `data/` (APIs) ou `agentes/` (agentes inteligentes). Nenhum import manual.
 
 ### Package by Feature (ADR-001)
 
-Cada API governamental é uma feature auto-contida:
+Features são organizadas em dois grupos:
+
+- **`data/`** — Features de consulta a APIs governamentais (16 features)
+- **`agentes/`** — Features de agentes inteligentes (redator, etc.)
+
+Cada feature é auto-contida:
 
 ```
-src/mcp_brasil/{feature}/
+src/mcp_brasil/data/{feature}/      # ou agentes/{feature}/
 ├── __init__.py     # FEATURE_META (obrigatório para auto-discovery)
 ├── server.py       # mcp: FastMCP (obrigatório)
 ├── tools.py        # Funções das tools
@@ -135,10 +141,10 @@ docs: update README with bacen feature
 Testes espelham `src/`:
 
 ```
-tests/{feature}/
-├── test_tools.py        # Mock client, testa lógica
-├── test_client.py       # respx mock HTTP
-└── test_integration.py  # fastmcp.Client e2e
+tests/data/{feature}/         # ou tests/agentes/{feature}/
+├── test_tools.py             # Mock client, testa lógica
+├── test_client.py            # respx mock HTTP
+└── test_integration.py       # fastmcp.Client e2e
 ```
 
 ## Documentação de referência
