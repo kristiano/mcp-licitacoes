@@ -12,10 +12,10 @@ from .tools import alertas_deter, buscar_focos_queimadas, consultar_desmatamento
 mcp = FastMCP("mcp-brasil-inpe")
 
 # Tools
-mcp.tool(buscar_focos_queimadas)
-mcp.tool(consultar_desmatamento)
-mcp.tool(alertas_deter)
-mcp.tool(dados_satelite)
+mcp.tool(buscar_focos_queimadas, tags={"busca", "queimadas", "satelite", "ambiental"})
+mcp.tool(consultar_desmatamento, tags={"consulta", "desmatamento", "prodes", "ambiental"})
+mcp.tool(alertas_deter, tags={"consulta", "deter", "alertas", "ambiental"})
+mcp.tool(dados_satelite, tags={"listagem", "satelites", "monitoramento"})
 
 # Resources (URIs without namespace prefix — mount adds "inpe/" automatically)
 mcp.resource("data://biomas", mime_type="application/json")(biomas_brasileiros)

@@ -34,11 +34,11 @@ from .tools import (
 mcp = FastMCP("mcp-brasil-redator")
 
 # Tools (5)
-mcp.tool(formatar_data_extenso)
-mcp.tool(gerar_numeracao)
-mcp.tool(consultar_pronome_tratamento)
-mcp.tool(validar_documento)
-mcp.tool(listar_tipos_documento)
+mcp.tool(formatar_data_extenso, tags={"formatacao", "data", "redacao-oficial"})
+mcp.tool(gerar_numeracao, tags={"formatacao", "numeracao", "redacao-oficial"})
+mcp.tool(consultar_pronome_tratamento, tags={"consulta", "pronomes", "redacao-oficial"})
+mcp.tool(validar_documento, tags={"validacao", "documento", "redacao-oficial"})
+mcp.tool(listar_tipos_documento, tags={"listagem", "tipos-documento", "redacao-oficial"})
 
 # Prompts (5)
 mcp.prompt(redator_oficio)

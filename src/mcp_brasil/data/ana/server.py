@@ -12,9 +12,9 @@ from .tools import buscar_estacoes, consultar_telemetria, monitorar_reservatorio
 mcp = FastMCP("mcp-brasil-ana")
 
 # Tools
-mcp.tool(buscar_estacoes)
-mcp.tool(consultar_telemetria)
-mcp.tool(monitorar_reservatorios)
+mcp.tool(buscar_estacoes, tags={"busca", "estacoes", "hidrologia"})
+mcp.tool(consultar_telemetria, tags={"consulta", "telemetria", "nivel-agua", "vazao"})
+mcp.tool(monitorar_reservatorios, tags={"consulta", "reservatorios", "volume"})
 
 # Resources (URIs without namespace prefix — mount adds "ana/" automatically)
 mcp.resource("data://tipos-estacao", mime_type="application/json")(tipos_estacao)
