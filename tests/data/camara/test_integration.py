@@ -16,7 +16,7 @@ CLIENT_MODULE = "mcp_brasil.data.camara.client"
 
 class TestToolsRegistered:
     @pytest.mark.asyncio
-    async def test_all_10_tools_registered(self) -> None:
+    async def test_all_11_tools_registered(self) -> None:
         async with Client(mcp) as c:
             tool_list = await c.list_tools()
             names = {t.name for t in tool_list}
@@ -24,6 +24,7 @@ class TestToolsRegistered:
                 "listar_deputados",
                 "buscar_deputado",
                 "buscar_proposicao",
+                "detalhar_proposicao",
                 "consultar_tramitacao",
                 "buscar_votacao",
                 "votos_nominais",
@@ -93,6 +94,27 @@ class TestToolExecution:
             async with Client(mcp) as c:
                 result = await c.call_tool("buscar_proposicao", {"sigla_tipo": "PL", "ano": 2024})
                 assert "Proposição E2E" in result.data
+
+    @pytest.mark.asyncio
+    async def test_detalhar_proposicao_e2e(self) -> None:
+        mock_data = Proposicao(
+            id=2300001,
+            sigla_tipo="PL",
+            numero=1234,
+            ano=2024,
+            ementa="Proposição detalhe E2E",
+            autor="Dep. Autor",
+            situacao="Tramitando",
+        )
+        with patch(
+            f"{CLIENT_MODULE}.obter_proposicao",
+            new_callable=AsyncMock,
+            return_value=mock_data,
+        ):
+            async with Client(mcp) as c:
+                result = await c.call_tool("detalhar_proposicao", {"proposicao_id": 2300001})
+                assert "Proposição detalhe E2E" in result.data
+                assert "Dep. Autor" in result.data
 
     @pytest.mark.asyncio
     async def test_votos_nominais_e2e(self) -> None:

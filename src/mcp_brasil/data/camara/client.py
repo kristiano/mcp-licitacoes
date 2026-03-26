@@ -81,6 +81,7 @@ def _parse_deputado(raw: dict[str, Any]) -> Deputado:
 
 def _parse_proposicao(raw: dict[str, Any]) -> Proposicao:
     status = raw.get("statusProposicao") or {}
+    orgao_status = status.get("orgao") or {} if isinstance(status, dict) else {}
     return Proposicao(
         id=raw.get("id"),
         sigla_tipo=raw.get("siglaTipo"),
@@ -89,7 +90,32 @@ def _parse_proposicao(raw: dict[str, Any]) -> Proposicao:
         ementa=raw.get("ementa"),
         data_apresentacao=raw.get("dataApresentacao"),
         situacao=status.get("descricaoSituacao") if isinstance(status, dict) else None,
-        autor=None,
+        orgao_situacao=orgao_status.get("sigla") if isinstance(orgao_status, dict) else None,
+        regime=status.get("regime") if isinstance(status, dict) else None,
+        url_inteiro_teor=raw.get("urlInteiroTeor"),
+        uri=raw.get("uri"),
+    )
+
+
+def _parse_proposicao_detalhe(raw: dict[str, Any]) -> Proposicao:
+    """Parse proposição from the detail endpoint (includes author info)."""
+    status = raw.get("statusProposicao") or {}
+    orgao_status = status.get("orgao") or {} if isinstance(status, dict) else {}
+
+    # Author can be in uriAutores or directly in the response
+    # The detail endpoint has nested status with author info
+    return Proposicao(
+        id=raw.get("id"),
+        sigla_tipo=raw.get("siglaTipo"),
+        numero=raw.get("numero"),
+        ano=raw.get("ano"),
+        ementa=raw.get("ementa") or raw.get("ementaDetalhada"),
+        data_apresentacao=raw.get("dataApresentacao"),
+        situacao=status.get("descricaoSituacao") if isinstance(status, dict) else None,
+        orgao_situacao=orgao_status.get("sigla") if isinstance(orgao_status, dict) else None,
+        regime=status.get("regime") if isinstance(status, dict) else None,
+        url_inteiro_teor=raw.get("urlInteiroTeor"),
+        uri=raw.get("uri"),
     )
 
 
@@ -241,6 +267,32 @@ async def buscar_proposicoes(
         params["keywords"] = keywords
     data = await _get(PROPOSICOES_URL, params)
     return [_parse_proposicao(p) for p in _safe_list(data, "proposicoes")]
+
+
+async def obter_proposicao(proposicao_id: int) -> Proposicao | None:
+    """Obtém detalhes completos de uma proposição, incluindo autores."""
+    data = await _get(f"{PROPOSICOES_URL}/{proposicao_id}")
+    if not isinstance(data, dict):
+        return None
+
+    prop = _parse_proposicao_detalhe(data)
+
+    # Fetch authors separately (the detail endpoint doesn't inline them)
+    try:
+        autores_data = await _get(f"{PROPOSICOES_URL}/{proposicao_id}/autores")
+        autores_list = _safe_list(autores_data, "autores")
+        if autores_list:
+            primeiro = autores_list[0]
+            prop.autor = primeiro.get("nome")
+            if isinstance(primeiro, dict):
+                prop.autor_partido = primeiro.get("siglaPartido")
+                prop.autor_uf = primeiro.get("siglaUf")
+            if len(autores_list) > 1:
+                prop.autor = f"{prop.autor} e outros ({len(autores_list)} autores)"
+    except Exception:
+        logger.warning("Falha ao buscar autores da proposição %d", proposicao_id)
+
+    return prop
 
 
 async def obter_tramitacoes(proposicao_id: int) -> list[Tramitacao]:

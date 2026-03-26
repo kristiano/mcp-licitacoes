@@ -27,7 +27,13 @@ class Proposicao(BaseModel):
     ementa: str | None = None
     data_apresentacao: str | None = None
     situacao: str | None = None
+    orgao_situacao: str | None = None
     autor: str | None = None
+    autor_partido: str | None = None
+    autor_uf: str | None = None
+    regime: str | None = None
+    url_inteiro_teor: str | None = None
+    uri: str | None = None
 
 
 class Tramitacao(BaseModel):

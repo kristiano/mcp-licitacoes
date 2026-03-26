@@ -91,9 +91,10 @@ class TestBuscarDeputado:
 
 class TestBuscarProposicao:
     @pytest.mark.asyncio
-    async def test_formats_table(self) -> None:
+    async def test_formats_table_with_id(self) -> None:
         mock_data = [
             Proposicao(
+                id=2300001,
                 sigla_tipo="PL",
                 numero=1234,
                 ano=2024,
@@ -106,13 +107,56 @@ class TestBuscarProposicao:
             result = await tools.buscar_proposicao(sigla_tipo="PL", ano=2024)
         assert "PL" in result
         assert "1234" in result
+        assert "2300001" in result
         assert "educação" in result
+        assert "detalhar_proposicao" in result
 
     @pytest.mark.asyncio
     async def test_empty(self) -> None:
         with patch(f"{MODULE}.buscar_proposicoes", new_callable=AsyncMock, return_value=[]):
             result = await tools.buscar_proposicao()
         assert "Nenhuma proposição" in result
+
+
+# ---------------------------------------------------------------------------
+# detalhar_proposicao
+# ---------------------------------------------------------------------------
+
+
+class TestDetalharProposicao:
+    @pytest.mark.asyncio
+    async def test_formats_detail(self) -> None:
+        mock_data = Proposicao(
+            id=2300001,
+            sigla_tipo="PL",
+            numero=1234,
+            ano=2024,
+            ementa="Dispõe sobre educação básica e fundamental",
+            data_apresentacao="2024-03-15",
+            situacao="Tramitando",
+            orgao_situacao="CCJC",
+            autor="Dep. Fulano",
+            autor_partido="PT",
+            autor_uf="SP",
+            regime="Urgência",
+            url_inteiro_teor="https://camara.leg.br/doc/1234",
+        )
+        with patch(f"{MODULE}.obter_proposicao", new_callable=AsyncMock, return_value=mock_data):
+            result = await tools.detalhar_proposicao(2300001)
+        assert "PL 1234/2024" in result
+        assert "Dep. Fulano" in result
+        assert "PT/SP" in result
+        assert "Tramitando" in result
+        assert "CCJC" in result
+        assert "Urgência" in result
+        assert "educação básica" in result
+        assert "https://camara.leg.br/doc/1234" in result
+
+    @pytest.mark.asyncio
+    async def test_not_found(self) -> None:
+        with patch(f"{MODULE}.obter_proposicao", new_callable=AsyncMock, return_value=None):
+            result = await tools.detalhar_proposicao(999999)
+        assert "não encontrada" in result
 
 
 # ---------------------------------------------------------------------------

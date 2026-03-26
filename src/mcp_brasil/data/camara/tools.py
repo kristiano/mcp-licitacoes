@@ -129,16 +129,65 @@ async def buscar_proposicao(
 
     rows = [
         (
+            str(p.id or "—"),
             f"{p.sigla_tipo or '—'} {p.numero or '—'}/{p.ano or '—'}",
-            (p.ementa or "—")[:80],
+            (p.ementa or "—")[:120] + ("..." if p.ementa and len(p.ementa) > 120 else ""),
             p.data_apresentacao or "—",
             (p.situacao or "—")[:30],
         )
         for p in proposicoes
     ]
     header = f"Proposições encontradas (página {pagina}):\n\n"
-    table = header + markdown_table(["Proposição", "Ementa", "Apresentação", "Situação"], rows)
-    return table + _pagination_hint(len(proposicoes), pagina)
+    table = header + markdown_table(
+        ["ID", "Proposição", "Ementa", "Apresentação", "Situação"], rows
+    )
+    hint = (
+        "\n\n> Use `detalhar_proposicao(proposicao_id=ID)` para ver"
+        " autor, ementa completa e status."
+    )
+    return table + hint + _pagination_hint(len(proposicoes), pagina)
+
+
+async def detalhar_proposicao(proposicao_id: int) -> str:
+    """Detalha uma proposição legislativa pelo ID.
+
+    Retorna informações completas: autor, ementa, situação, regime de
+    tramitação e link para o inteiro teor. Use o ID obtido em
+    ``buscar_proposicao``.
+
+    Args:
+        proposicao_id: ID da proposição na API da Câmara.
+
+    Returns:
+        Detalhes completos da proposição.
+    """
+    prop = await client.obter_proposicao(proposicao_id)
+    if not prop:
+        return f"Proposição com ID {proposicao_id} não encontrada."
+
+    tipo_num = f"{prop.sigla_tipo or ''} {prop.numero or ''}/{prop.ano or ''}"
+    lines = [
+        f"**{tipo_num.strip()}** (ID: {prop.id})",
+        "",
+        f"**Ementa:** {prop.ementa or '—'}",
+        "",
+        f"- Autor: {prop.autor or '—'}",
+    ]
+    if prop.autor_partido or prop.autor_uf:
+        partido_uf = "/".join(filter(None, [prop.autor_partido, prop.autor_uf]))
+        lines.append(f"- Partido/UF do autor: {partido_uf}")
+    lines.extend(
+        [
+            f"- Apresentação: {prop.data_apresentacao or '—'}",
+            f"- Situação: {prop.situacao or '—'}",
+            f"- Órgão: {prop.orgao_situacao or '—'}",
+            f"- Regime: {prop.regime or '—'}",
+        ]
+    )
+    if prop.url_inteiro_teor:
+        lines.append(f"- Inteiro teor: {prop.url_inteiro_teor}")
+
+    return "\n".join(lines)
 
 
 async def consultar_tramitacao(proposicao_id: int) -> str:

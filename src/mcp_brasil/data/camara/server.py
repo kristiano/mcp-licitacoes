@@ -15,6 +15,7 @@ from .tools import (
     buscar_votacao,
     consultar_tramitacao,
     despesas_deputado,
+    detalhar_proposicao,
     frentes_parlamentares,
     listar_deputados,
     votos_nominais,
@@ -22,10 +23,11 @@ from .tools import (
 
 mcp = FastMCP("mcp-brasil-camara")
 
-# Tools (10)
+# Tools (11)
 mcp.tool(listar_deputados, tags={"listagem", "deputados", "parlamentares"})
 mcp.tool(buscar_deputado, tags={"detalhe", "deputados", "parlamentares"})
 mcp.tool(buscar_proposicao, tags={"busca", "proposicoes", "legislacao"})
+mcp.tool(detalhar_proposicao, tags={"detalhe", "proposicoes", "legislacao"})
 mcp.tool(consultar_tramitacao, tags={"consulta", "tramitacao", "proposicoes"})
 mcp.tool(buscar_votacao, tags={"busca", "votacoes", "plenario"})
 mcp.tool(votos_nominais, tags={"detalhe", "votacoes", "plenario"})

@@ -172,6 +172,96 @@ class TestBuscarProposicoes:
 
 
 # ---------------------------------------------------------------------------
+# obter_proposicao (detail + authors)
+# ---------------------------------------------------------------------------
+
+
+class TestObterProposicao:
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_returns_detail_with_author(self) -> None:
+        respx.get(f"{PROPOSICOES_URL}/2300001").mock(
+            return_value=httpx.Response(
+                200,
+                json={
+                    "dados": {
+                        "id": 2300001,
+                        "siglaTipo": "PL",
+                        "numero": 1234,
+                        "ano": 2024,
+                        "ementa": "Dispõe sobre educação",
+                        "dataApresentacao": "2024-03-15",
+                        "statusProposicao": {
+                            "descricaoSituacao": "Tramitando",
+                            "orgao": {"sigla": "CCJC"},
+                            "regime": "Urgência",
+                        },
+                        "urlInteiroTeor": "https://camara.leg.br/doc/1234",
+                    },
+                    "links": [],
+                },
+            )
+        )
+        respx.get(f"{PROPOSICOES_URL}/2300001/autores").mock(
+            return_value=httpx.Response(
+                200,
+                json={
+                    "dados": [{"nome": "Dep. Fulano", "siglaPartido": "PT", "siglaUf": "SP"}],
+                    "links": [],
+                },
+            )
+        )
+        result = await client.obter_proposicao(2300001)
+        assert result is not None
+        assert result.sigla_tipo == "PL"
+        assert result.situacao == "Tramitando"
+        assert result.orgao_situacao == "CCJC"
+        assert result.autor == "Dep. Fulano"
+        assert result.autor_partido == "PT"
+        assert result.autor_uf == "SP"
+        assert result.regime == "Urgência"
+
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_multiple_authors(self) -> None:
+        respx.get(f"{PROPOSICOES_URL}/2300001").mock(
+            return_value=httpx.Response(
+                200,
+                json={
+                    "dados": {"id": 2300001, "siglaTipo": "PL", "numero": 1},
+                    "links": [],
+                },
+            )
+        )
+        respx.get(f"{PROPOSICOES_URL}/2300001/autores").mock(
+            return_value=httpx.Response(
+                200,
+                json={
+                    "dados": [
+                        {"nome": "Dep. A"},
+                        {"nome": "Dep. B"},
+                        {"nome": "Dep. C"},
+                    ],
+                    "links": [],
+                },
+            )
+        )
+        result = await client.obter_proposicao(2300001)
+        assert result is not None
+        assert "Dep. A" in (result.autor or "")
+        assert "3 autores" in (result.autor or "")
+
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_not_found(self) -> None:
+        respx.get(f"{PROPOSICOES_URL}/999999").mock(
+            return_value=httpx.Response(200, json={"dados": [], "links": []})
+        )
+        result = await client.obter_proposicao(999999)
+        assert result is None
+
+
+# ---------------------------------------------------------------------------
 # obter_tramitacoes
 # ---------------------------------------------------------------------------
 
@@ -467,3 +557,9 @@ class TestParserEdgeCases:
     def test_frente_coordenador_not_dict(self) -> None:
         result = client._parse_frente({"coordenador": "Dep. Nome"})
         assert result.coordenador is None
+
+    def test_proposicao_detalhe_empty(self) -> None:
+        result = client._parse_proposicao_detalhe({})
+        assert result.sigla_tipo is None
+        assert result.situacao is None
+        assert result.orgao_situacao is None
