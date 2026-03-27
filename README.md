@@ -190,7 +190,6 @@ Exemplos detalhados de como usar o mcp-brasil em diferentes contextos profission
 
 | Caso de Uso | Descrição | APIs Combinadas |
 |-------------|-----------|-----------------|
-| [Raio-X Parlamentar](docs/examples/raio-x-parlamentar.md) | Conflito de interesses: doações × votações × contratos | Câmara, TSE, Transparência, TCU |
 | [Panorama Econômico](docs/examples/panorama-economico.md) | Dashboard econômico com Selic, IPCA, câmbio, PIB | Bacen, IBGE, Transparência |
 | [Fiscalização Municipal](docs/examples/fiscalizacao-municipal.md) | Onde vai o dinheiro da sua cidade — 9 TCEs cruzados | TCEs, PNCP, TransfereGov, IBGE |
 | [Análise Legislativa](docs/examples/analise-legislativa.md) | Ciclo completo de um PL: Câmara → Senado → Diário Oficial → STF | Câmara, Senado, Diário Oficial, DataJud |
