@@ -2,6 +2,22 @@
 
 Todas as mudanças notáveis do mcp-brasil estão documentadas neste arquivo.
 
+## [0.5.0] - 2026-03-27
+
+### Bug Fixes
+
+- **anuncios_eleitorais:** Align client with Meta Graph API format
+
+### Documentation
+
+- Remove ADR references and documentation section from CONTRIBUTING
+- Update README with tabua_mares feature and correct counts
+- Remove raio-x-parlamentar example
+
+### Features
+
+- **anuncios_eleitorais:** Add Meta Ad Library feature with 6 tools, 3 resources, and 3 prompts
+
 ## [0.4.0] - 2026-03-26
 
 ### Features
