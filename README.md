@@ -4,16 +4,16 @@
 
 # mcp-brasil
 
-**MCP Server para 28 APIs públicas brasileiras**
+**MCP Server para 39 APIs públicas brasileiras**
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-213 tools · 55 resources · 45 prompts
+309 tools · 80 resources · 62 prompts · 14 áreas temáticas
 
-Conecte AI agents (Claude, GPT, Copilot, etc.) a dados governamentais do Brasil — economia, legislação, transparência, judiciário, eleições, meio ambiente, saúde e mais.
+Conecte AI agents (Claude, GPT, Copilot, etc.) a dados governamentais do Brasil — economia, legislação, transparência, judiciário, eleições, meio ambiente, saúde, segurança pública e mais.
 
-**26 APIs não requerem chave** · 2 usam chaves gratuitas (cadastro em 1 min)
+**36 APIs não requerem chave** · 3 usam chaves gratuitas (cadastro em 1 min)
 
 [Quick Start](#quick-start) · [Fontes de dados](#fontes-de-dados) · [Casos de Uso](#casos-de-uso) · [Documentação](#documentação) · [Desenvolvimento](#desenvolvimento)
 
@@ -23,10 +23,10 @@ Conecte AI agents (Claude, GPT, Copilot, etc.) a dados governamentais do Brasil 
 
 ## Features
 
-- **213 tools** em 28 features — econômico, legislativo, transparência, judiciário, eleitoral, ambiental, saúde, compras públicas, oceanografia
+- **309 tools** em 39 features cobrindo 14 áreas — economia, legislativo, transparência, judiciário, eleitoral, ambiental, saúde, segurança pública, compras públicas, educação, oceanografia e mais
 - **Cross-referencing** com `planejar_consulta` — cria planos de execução combinando múltiplas APIs (ex: gastos de um deputado + votações + proposições)
 - **Execução em lote** com `executar_lote` — dispara consultas em paralelo numa única chamada
-- **Smart discovery** — BM25 search transform filtra 204 tools para só mostrar as relevantes ao contexto
+- **Smart discovery** — BM25 search transform filtra 309 tools para só mostrar as relevantes ao contexto
 - **Auto-registry** — adicionar uma feature é criar uma pasta; zero configuração manual
 - **Async everywhere** — httpx async + Pydantic v2 + rate limiting com backoff
 
@@ -61,7 +61,7 @@ Adicione ao `claude_desktop_config.json`:
 }
 ```
 
-> As chaves são opcionais — sem elas, as 24 APIs restantes funcionam normalmente.
+> As chaves são opcionais — sem elas, as 36 APIs restantes funcionam normalmente.
 
 ### VS Code / Cursor
 
@@ -113,39 +113,105 @@ Conecte o server e faça perguntas em linguagem natural:
 
 ## Fontes de dados
 
-| Categoria | Feature | API | Tools |
-|-----------|---------|-----|-------|
-| **Econômico** | `ibge` | IBGE — estados, municípios, nomes, agregados estatísticos | 9 |
-| | `bacen` | Banco Central — Selic, IPCA, câmbio, PIB e +190 séries | 9 |
-| **Legislativo** | `camara` | Câmara dos Deputados — deputados, proposições, votações, despesas | 10 |
-| | `senado` | Senado Federal — senadores, matérias, votações, comissões | 26 |
-| **Transparência / Fiscal** | `transparencia` | Portal da Transparência — contratos, despesas, servidores, sanções | 18 |
-| | `tcu` | Tribunal de Contas da União — acórdãos, licitantes inidôneos | 8 |
-| | `tce_sp` | TCE-SP — despesas e receitas de 645 municípios paulistas | 3 |
-| | `tce_rj` | TCE-RJ — licitações, contratos, obras, penalidades | 7 |
-| | `tce_rs` | TCE-RS — educação, saúde, gestão fiscal (LRF) | 5 |
-| | `tce_sc` | TCE-SC — municípios e unidades gestoras | 2 |
-| | `tce_pe` | TCE-PE — licitações, contratos, despesas, fornecedores | 5 |
-| | `tce_ce` | TCE-CE — licitações, contratos, empenhos | 4 |
-| | `tce_rn` | TCE-RN — jurisdicionados, licitações, contratos | 5 |
-| | `tce_pi` | TCE-PI — prefeituras, despesas, receitas | 5 |
-| | `tce_to` | TCE-TO — processos, pautas de sessões | 3 |
-| **Judiciário** | `datajud` | DataJud/CNJ — processos judiciais, movimentações | 7 |
-| | `jurisprudencia` | STF, STJ e TST — acórdãos, súmulas, decisões | 6 |
-| **Eleitoral** | `tse` | TSE — eleições, candidatos, prestação de contas | 15 |
-| **Ambiental** | `inpe` | INPE — focos de queimadas e desmatamento | 4 |
-| | `ana` | ANA — estações hidrológicas, telemetria, reservatórios | 3 |
-| **Saúde** | `saude` | CNES/DataSUS — estabelecimentos, profissionais, leitos | 4 |
-| **Oceanografia** | `tabua_mares` | Tábua de Marés — previsão de marés para portos do litoral brasileiro | 7 |
-| **Compras Públicas** | `pncp` | PNCP — contratações públicas (Lei 14.133/2021) | 6 |
-| | `dadosabertos` | Compras.gov.br — SIASG/ComprasNet | 8 |
-| **Utilidades** | `brasilapi` | BrasilAPI — CEP, CNPJ, DDD, bancos, câmbio, FIPE, PIX | 16 |
-| | `dados_abertos` | Dados Abertos (dados.gov.br) — catálogo de datasets | 4 |
-| | `diario_oficial` | Querido Diário — diários oficiais de 5.000+ cidades | 4 |
-| | `transferegov` | TransfereGov — emendas parlamentares PIX | 5 |
-| **Agentes IA** | `redator` | Redator Oficial — ofício, despacho, portaria, parecer, nota técnica | 5 |
+### Economia e Finanças
 
-Além das tools das features, o server raiz expõe 4 meta-tools: `listar_features`, `recomendar_tools`, `planejar_consulta` e `executar_lote`.
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `bacen` | Banco Central — Selic, IPCA, câmbio, PIB e +190 séries temporais | 9 |
+| `bndes` | BNDES — operações de financiamento, desembolsos, instituições credenciadas | 4 |
+
+### Geografia e Estatística
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `ibge` | IBGE — estados, municípios, nomes, agregados estatísticos | 9 |
+
+### Legislativo
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `camara` | Câmara dos Deputados — deputados, proposições, votações, despesas | 11 |
+| `senado` | Senado Federal — senadores, matérias, votações, comissões | 26 |
+
+### Transparência e Fiscalização
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `transparencia` | Portal da Transparência — contratos, despesas, servidores, sanções | 18 |
+| `tcu` | Tribunal de Contas da União — acórdãos, inidôneos, pautas | 9 |
+| `tce_sp` | TCE-SP — despesas e receitas de 645 municípios paulistas | 3 |
+| `tce_rj` | TCE-RJ — licitações, contratos, obras, penalidades | 7 |
+| `tce_rs` | TCE-RS — educação, saúde, gestão fiscal (LRF) | 5 |
+| `tce_pe` | TCE-PE — licitações, contratos, despesas, fornecedores | 5 |
+| `tce_ce` | TCE-CE — licitações, contratos, empenhos | 4 |
+| `tce_es` | TCE-ES — licitações, contratos, despesas | 4 |
+| `tce_rn` | TCE-RN — jurisdicionados, licitações, contratos | 5 |
+| `tce_pi` | TCE-PI — prefeituras, despesas, receitas | 5 |
+| `tce_sc` | TCE-SC — municípios e unidades gestoras | 2 |
+| `tce_to` | TCE-TO — processos, pautas de sessões | 3 |
+
+### Judiciário
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `datajud` | DataJud/CNJ — processos judiciais, movimentações | 7 |
+| `jurisprudencia` | STF, STJ e TST — acórdãos, súmulas, decisões | 6 |
+
+### Eleitoral
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `tse` | TSE — eleições, candidatos, prestação de contas | 15 |
+| `anuncios_eleitorais` | Anúncios eleitorais — propaganda eleitoral na internet | 6 |
+
+### Meio Ambiente
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `inpe` | INPE — focos de queimadas e desmatamento | 4 |
+| `ana` | ANA — estações hidrológicas, telemetria, reservatórios | 3 |
+
+### Saúde
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `saude` | CNES/DataSUS — estabelecimentos, profissionais, leitos | 10 |
+| `opendatasus` | OpenDataSUS — datasets de saúde pública | 7 |
+| `anvisa` | ANVISA — medicamentos, cosméticos, saneantes | 10 |
+| `denasus` | DENASUS — auditorias do SUS | 5 |
+| `imunizacao` | Imunização — vacinação e SRAG | 10 |
+| `bps` | BPS — preços de referência em saúde | 3 |
+| `farmacia_popular` | Farmácia Popular — medicamentos, farmácias, municípios | 8 |
+
+### Segurança Pública
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `forum_seguranca` | Fórum Brasileiro de Segurança Pública — Atlas da Violência, Anuário | 4 |
+
+### Compras Públicas
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `compras` | PNCP + ComprasNet/SIASG — licitações e contratos públicos | 29 |
+| `transferegov` | TransfereGov — emendas parlamentares PIX | 5 |
+
+### Educação
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `rename` | RENAME — Relação Nacional de Medicamentos Essenciais | 5 |
+
+### Dados Abertos e Utilidades
+
+| Feature | Fonte | Tools |
+|---------|-------|:-----:|
+| `brasilapi` | BrasilAPI — CEP, CNPJ, DDD, bancos, câmbio, FIPE, PIX | 16 |
+| `dados_abertos` | Dados Abertos (dados.gov.br) — catálogo de datasets | 4 |
+| `diario_oficial` | Querido Diário — diários oficiais de 5.000+ cidades | 11 |
+| `tabua_mares` | Tábua de Marés — previsão de marés para portos do litoral | 7 |
+
+> O server raiz também expõe 4 meta-tools: `listar_features`, `recomendar_tools`, `planejar_consulta` e `executar_lote`.
 
 ## Chaves de API
 
@@ -153,7 +219,8 @@ Além das tools das features, o server raiz expõe 4 meta-tools: `listar_feature
 |-----|-------------|------------|
 | Portal da Transparência | Opcional | [Cadastro gratuito](https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email) |
 | DataJud/CNJ | Opcional | [Cadastro gratuito](https://datajud-wiki.cnj.jus.br/api-publica/acesso) |
-| Todas as outras (26) | Nenhuma chave | — |
+| Anúncios Eleitorais | Opcional | [Cadastro gratuito](https://dados.tse.jus.br/) |
+| Todas as outras (36) | Nenhuma chave | — |
 
 Configure via variáveis de ambiente ou `.env`:
 
@@ -178,7 +245,7 @@ DATAJUD_API_KEY=sua-chave
 |--------|-----------|
 | [Quick Start](docs/guide/quickstart.md) | Instalação e configuração em 2 minutos |
 | [Arquitetura](docs/concepts/architecture.md) | Como o projeto funciona por dentro |
-| [Catálogo de Features](docs/reference/features.md) | Todas as 28 features e suas 213 tools |
+| [Catálogo de Features](docs/reference/features.md) | Todas as 39 features e suas 309 tools |
 | [Smart Tools](docs/reference/smart-tools.md) | Meta-tools: planner, batch, discovery |
 | [Adicionando Features](docs/guide/adding-features.md) | Guia para contribuir com novas APIs |
 | [Configuração](docs/reference/configuration.md) | Variáveis de ambiente e opções |
@@ -226,7 +293,7 @@ O projeto usa **Package by Feature** com **Auto-Registry** — cada feature é u
 src/mcp_brasil/
 ├── server.py              # Auto-registry (nunca editado manualmente)
 ├── _shared/               # Utilitários compartilhados
-├── data/                  # 27 features de consulta a APIs
+├── data/                  # 38 features de consulta a APIs
 │   ├── ibge/
 │   │   ├── __init__.py    # FEATURE_META
 │   │   ├── server.py      # FastMCP instance
