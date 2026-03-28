@@ -2,6 +2,25 @@
 
 Todas as mudanças notáveis do mcp-brasil estão documentadas neste arquivo.
 
+## [0.7.1] - 2026-03-28
+
+### Bug Fixes
+
+- **saude:** Handle unexpected API response types from DataSUS
+- Handle broken API endpoints across 6 features
+- Handle broken API endpoints across 3 features
+
+### Documentation
+
+- **anuncios_eleitorais:** Add Meta Ad Library API reference
+- Add Code Mode reference and update smart-tools docs
+
+### Features
+
+- **seguranca:** Add atlas_violencia and sinesp features
+- **atlas_violencia:** Add IPEA violence statistics feature with 7 tools
+- **sinesp:** Add MJSP CKAN portal feature with 6 tools
+
 ## [0.7.0] - 2026-03-28
 
 ### Bug Fixes
