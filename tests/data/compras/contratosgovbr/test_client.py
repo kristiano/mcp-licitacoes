@@ -97,9 +97,7 @@ class TestListarUnidades:
     @pytest.mark.asyncio
     @respx.mock
     async def test_returns_unidades(self) -> None:
-        respx.get(UNIDADES_URL).mock(
-            return_value=httpx.Response(200, json=[{"codigo": "110161"}])
-        )
+        respx.get(UNIDADES_URL).mock(return_value=httpx.Response(200, json=[{"codigo": "110161"}]))
         result = await client.listar_unidades()
         assert len(result) == 1
 
@@ -128,9 +126,7 @@ class TestListarContratosUg:
     @pytest.mark.asyncio
     @respx.mock
     async def test_empty_ug(self) -> None:
-        respx.get(f"{CONTRATO_POR_UG_URL}/999999").mock(
-            return_value=httpx.Response(200, json=[])
-        )
+        respx.get(f"{CONTRATO_POR_UG_URL}/999999").mock(return_value=httpx.Response(200, json=[]))
         result = await client.listar_contratos_ug(999999)
         assert result == []
 
@@ -151,9 +147,7 @@ class TestConsultarContrato:
     @pytest.mark.asyncio
     @respx.mock
     async def test_empty_list(self) -> None:
-        respx.get(f"{CONTRATO_POR_ID_URL}/999").mock(
-            return_value=httpx.Response(200, json=[])
-        )
+        respx.get(f"{CONTRATO_POR_ID_URL}/999").mock(return_value=httpx.Response(200, json=[]))
         result = await client.consultar_contrato(999)
         assert result is None
 

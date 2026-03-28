@@ -18,7 +18,13 @@ FEATURE_META = FeatureMeta(
     api_base="https://pncp.gov.br/api/consulta",
     requires_auth=False,
     tags=[
-        "licitacoes", "contratos", "compras", "pncp",
-        "fornecedores", "catmat", "catser", "empenhos",
+        "licitacoes",
+        "contratos",
+        "compras",
+        "pncp",
+        "fornecedores",
+        "catmat",
+        "catser",
+        "empenhos",
     ],
 )

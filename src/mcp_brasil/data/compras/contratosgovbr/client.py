@@ -201,9 +201,7 @@ async def listar_historico(contrato_id: int) -> list[HistoricoContrato]:
 
 async def listar_itens(contrato_id: int) -> list[ItemContrato]:
     """List items for a contract."""
-    data: list[dict[str, Any]] = await http_get(
-        f"{CONTRATO_SUBRESOURCE_URL}/{contrato_id}/itens"
-    )
+    data: list[dict[str, Any]] = await http_get(f"{CONTRATO_SUBRESOURCE_URL}/{contrato_id}/itens")
     if not isinstance(data, list):
         return []
     return [
